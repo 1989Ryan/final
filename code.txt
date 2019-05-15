@@ -1,0 +1,70 @@
+class basic_cv_tool:
+
+    def __init__(self, ImageName):
+        self.ImageName = ImageName
+
+    def ImageRead(self, ImageName):
+        img = cv2.imread(ImageName, cv2.IMREAD_GRAYSCALE)
+        return img
+
+    def houghprocess(self,edgename, imagename, index):
+        if edgename =='canny':
+            name = imagename
+            image = cv2.imread(name)
+            gray = cv2.imread(name, cv2.IMREAD_GRAYSCALE)
+            edge = cv2.Canny(gray, 100, 200)
+            lines = cv2.HoughLines(edge,1,np.pi/180,index)
+            lines1 = lines[:,0,:]#提取为为二维
+            for rho,theta in lines1[:]: 
+                a = np.cos(theta)
+                b = np.sin(theta)
+                x0 = a*rho
+                y0 = b*rho
+                x1 = int(x0 + 1000*(-b))
+                y1 = int(y0 + 1000*(a))
+                x2 = int(x0 - 1000*(-b))
+                y2 = int(y0 - 1000*(a)) 
+                cv2.line(image,(x1,y1),(x2,y2),(0,0,255),1)
+            return image
+        elif edgename == 'sobel':
+            name =imagename
+            image = cv2.imread(name)
+            gray = cv2.imread(name, cv2.IMREAD_GRAYSCALE)
+            X = cv2.Sobel(gray, cv2.CV_16S, 1, 0)
+            Y = cv2.Sobel(gray, cv2.CV_16S, 0, 1)
+            absX, absY = cv2.convertScaleAbs(X), cv2.convertScaleAbs(Y)
+            dst = cv2.addWeighted(absX, 0.5, absY, 0.5, 0)
+            dst[dst >= 40], dst[dst < 40] = 255, 0
+            lines = cv2.HoughLines(dst,1,np.pi/180,index)
+            lines1 = lines[:,0,:]#提取为为二维
+            for rho,theta in lines1[:]: 
+                a = np.cos(theta)
+                b = np.sin(theta)
+                x0 = a*rho
+                y0 = b*rho
+                x1 = int(x0 + 1000*(-b))
+                y1 = int(y0 + 1000*(a))
+                x2 = int(x0 - 1000*(-b))
+                y2 = int(y0 - 1000*(a)) 
+                cv2.line(image,(x1,y1),(x2,y2),(0,0,255),1)
+            return image
+        elif edgename == 'laplace':
+            name = imagename
+            image = cv2.imread(name)
+            gray = cv2.imread(name, cv2.IMREAD_GRAYSCALE)
+            gray_lap = cv2.Laplacian(gray,cv2.CV_16S,ksize = 3)
+            dst = cv2.convertScaleAbs(gray_lap)
+            dst[dst >= 40], dst[dst < 40] = 255, 0
+            lines = cv2.HoughLines(dst,1,np.pi/180,index)
+            lines1 = lines[:,0,:]#提取为为二维
+            for rho,theta in lines1[:]: 
+                a = np.cos(theta)
+                b = np.sin(theta)
+                x0 = a*rho
+                y0 = b*rho
+                x1 = int(x0 + 1000*(-b))
+                y1 = int(y0 + 1000*(a))
+                x2 = int(x0 - 1000*(-b))
+                y2 = int(y0 - 1000*(a)) 
+                cv2.line(image,(x1,y1),(x2,y2),(0,0,255),1)
+            return image
