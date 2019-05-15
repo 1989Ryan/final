@@ -24,6 +24,3 @@ For previous homework, click [me](https://1989Ryan.github.io/DIPhw/diphw.html).
 Python-Opencv
 
 Numpy
-# 数字图像处理第七次作业
-
-##
